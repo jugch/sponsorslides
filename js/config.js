@@ -14,7 +14,7 @@ var config = {
     // Supported tags: <h1> <h2> <h3> <p> <i> <b>
     // Set it to false to hide it completely
     // headline: false,
-    headline: '<h2><b>A big thanks to our sponsors</b></h2>',
+    headline: '<h2><b>A big thanks to our Supporting Members</b></h2>',
 
     // Slide display duration
     // Time each slide is displayed in ms.

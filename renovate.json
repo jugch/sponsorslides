@@ -4,9 +4,5 @@
     "config:recommended",
     ":disableDependencyDashboard"
   ],
-  "packageRules": [
-    {
-      "commitMessagePrefix" : "⬆️ "
-    }
-  ]
+  "commitMessagePrefix" : "⬆️ "
 }

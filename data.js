@@ -1,6 +1,6 @@
 const sponsorConfig = {
     // Page title configuration
-    pageTitle: "JAVA USER GROUP CH",
+    pageTitle: "JUG Switzerland Partners",
     
     // Content of the headline on the first slide
     headline: '<h2><b>A big thanks to our Supporting Members</b></h2>',

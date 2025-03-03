@@ -1,61 +1,875 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=1024"/>
-    <title>JUG Switzerland Partners</title>
-    <meta name="description" content="JUG Switzerland aims at promoting the application of Java technology in Switzerland."/>
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <meta charset="UTF-8">
+    <title>JAVA USER GROUP CH</title>
+    <script src="data.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f5f5f5;
+            --container-width: 1200px;
+            --perspective-container-width: 1500px;
+        }
 
-    <link href="less/main.less" rel="stylesheet/less" type="text/css"/>
+        @media (min-width: 1600px) {
+            body {
+                --container-width: 1550px;
+            }
+        }
+
+        :root {
+            --transition-duration: 1.6s;
+        }
+
+        .sponsors-page {
+            overflow-y: auto;
+            display: block;
+            background-color: #f5f5f5;
+        }
+
+        .sponsors-layout {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: calc(100vh - 10rem);
+            height: 100%;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .sponsors-top, .sponsors-bottom, .silver-sponsors-top, .silver-sponsors-bottom {
+            padding: 2rem;
+            flex-shrink: 0;
+        }
+
+        .sponsors-container {
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .platinum-sponsors {
+            display: grid;
+            place-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .platinum-sponsors img {
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .gold-sponsors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 3rem;
+            place-items: center;
+            width: 100%;
+        }
+
+        .gold-sponsors img {
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .silver-sponsors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            place-items: center;
+        }
+
+        .silver-sponsors img {
+            height: 48px;
+            object-fit: contain;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .sponsor-wrapper {
+            position: relative;
+        }
+
+        .sponsor-image, .svg-container {
+            transition: width var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        height var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        top var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        left var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        margin-left var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        margin-top var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1);
+            display: block;
+            width: auto;
+            height: auto;
+            position: relative;
+            will-change: width, height, top, left, margin-left, margin-top;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: antialiased;
+            image-rendering: high-quality;
+            image-rendering: -webkit-optimize-contrast;
+        }
+
+        .sponsor-wrapper.animating::before {
+            content: '';
+            display: block;
+            position: relative;
+            width: 100%;
+            opacity: 0;
+        }
+
+        .sponsor-wrapper.animating .sponsor-image {
+            position: fixed;
+            z-index: 1000;
+            transform-style: preserve-3d;
+        }
+
+        .platinum-sponsors .sponsor-wrapper::before {
+            height: 120px;
+        }
+
+        .gold-sponsors .sponsor-wrapper::before {
+            height: 80px;
+        }
+
+        .silver-sponsors .sponsor-wrapper::before {
+            height: 48px;
+        }
+
+        .sponsor-image.centered,
+        .svg-container.centered {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            z-index: 1000;
+        }
+
+        .sponsor-image.returning,
+        .svg-container.returning {
+            transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+        }
+
+        .overlay {
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .headline {
+            display: none;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            transition: transform var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1);
+            background: #f5f5f5;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transform-origin: center center;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-page {
+            display: block;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .welcome-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            background-color: white;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            min-height: calc(100vh - 10rem);
+            height: 100%;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .welcome-logo {
+            width: 800px;
+            height: auto;
+            max-width: 90%;
+        }
+
+        .welcome-headline {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: #333;
+        }
+
+        .welcome-headline b {
+            color: #000;
+            font-weight: 700;
+        }
+
+        .main-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 4rem 0 6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 10rem);
+            box-sizing: border-box;
+        }
+
+        .middle-section {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .sponsors-bottom {
+            background: white;
+            padding-bottom: 4rem;
+            width: 100%;
+        }
+
+        .silver-sponsors-top, .silver-sponsors-bottom {
+            background: white;
+            padding: 2rem;
+            width: 100%;
+            border-radius: 0;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+        
+        .silver-sponsors {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 3rem;
+            place-items: center;
+            width: 100%;
+        }
+        
+        .silver-sponsors img {
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .welcome-content, .sponsors-layout {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            min-height: calc(100vh - 10rem);
+            max-width: var(--container-width);
+            margin: 0 auto;
+        }
+
+        .welcome-content {
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            gap: 3rem;
+            box-sizing: border-box;
+        }
+
+        .perspective-container {
+            perspective: var(--perspective-container-width);
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            transition: transform var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1),
+                        opacity var(--transition-duration) cubic-bezier(0.4, 0.0, 0.2, 1);
+            background: #f5f5f5;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            transform-origin: center center;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
+        }
+        
+        .page.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .welcome-page.hidden {
+            transform: rotateY(90deg) translateZ(100px) scale(0.8);
+        }
+        
+        .sponsors-page.hidden {
+            transform: rotateX(-90deg) translateY(100px) scale(0.8);
+        }
+        
+        .silver-sponsors-page.hidden {
+            transform: rotateY(-90deg) translateZ(100px) scale(0.8);
+        }
+        
+        .transition-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .transition-particles.active {
+            opacity: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: #D5102A;
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transform-origin: center;
+        }
+
+        .particle.blue, .particle.gold, .particle.silver, .particle.red {
+            background: #D5102A;
+            box-shadow: none;
+        }
+        
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+            transition: opacity 0.3s ease;
+        }
+        
+        .flash-overlay.active {
+            opacity: 0.6;
+        }
+    </style>
 </head>
-
-<!-- Not-supported class will be removed when support is given -->
-<body class="impress-not-supported">
-
-<!-- FALLBACK (for unsupported browsers) -->
-<div class="fallback-message">
-    <p>Your browser
-        <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.
-    </p>
-
-    <p>For the best experience please use a modern browser of your choice, such as Firefox.</p>
-</div>
-
-<!-- Impress slide CONTENT -->
-<div id="impress" style="display: none;">
-    <div id="intro" class="step" data-scale="2" data-rotate-y="20" data-rotate-x="-10"></div>
-
-    <!-- First prism face: JUG.CH INTRO MESSAGE SLIDE -->
-    <div id="jug" class="step prism-face jug" data-z="260">
-        <div class="prism-face-inner">
-            <div id="java-group">
-                <span class="image-helper"></span><img src="images/jug_logo.svg"/>
+<body>
+    <div class="perspective-container">
+        <div class="welcome-page page">
+            <div class="main-container">
+                <div class="welcome-content">
+                    <img src="images/jug_logo.svg" alt="JUG Logo" class="welcome-logo">
+                    <div class="welcome-headline" id="welcome-headline"></div>
+                </div>
             </div>
-            <div id="headline"></div>
+        </div>
+
+        <div class="sponsors-page page hidden">
+            <div class="main-container">
+                <div class="sponsors-layout">
+                    <div class="sponsors-top">
+                        <div class="platinum-sponsors">
+                            <div class="sponsor-wrapper">
+                                <img src="images/platinum/mimacom.png" alt="Platinum Sponsor" class="sponsor-image">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="middle-section"></div>
+
+                    <div class="sponsors-bottom">
+                        <div class="gold-sponsors" id="goldSponsors">
+                            <!-- Gold sponsors will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="silver-sponsors-page page hidden">
+            <div class="main-container">
+                <div class="sponsors-layout">
+                    <div class="silver-sponsors-top">
+                        <div class="silver-sponsors" id="silverSponsorsTop">
+                            <!-- Top silver sponsors will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="middle-section"></div>
+
+                    <div class="silver-sponsors-bottom">
+                        <div class="silver-sponsors" id="silverSponsorsBottom">
+                            <!-- Bottom silver sponsors will be inserted here by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    
+    <div class="transition-particles"></div>
+    <div class="flash-overlay"></div>
 
-    <!-- Second prism face: PRIMARY SPONSORS -->
-    <div id="primary-sponsors" class="step prism-face primary-sponsors" data-rotate-x="-120" data-y="150">
-        <div class="prism-face-inner" id="primary-sponsor-logos"></div>
-    </div>
+    <script>
+        let isAnimatingSponsor = false;
+        let shouldStopSponsorAnimation = false;
+        let sponsorAnimationComplete = false;
+        let debugMode = false;
+        
+        function checkDebugModeFromURL() {
+            debugMode = window.location.hash.includes('debug');
+            console.log(`Debug mode ${debugMode ? 'enabled' : 'disabled'} from URL`);
+            return debugMode;
+        }
+        
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            
+            if (debugMode) {
+                window.location.hash = 'debug';
+            } else {
+                window.location.hash = '';
+            }
+            
+            updateTransitionSpeeds();
+            
+            console.log(`Debug mode ${debugMode ? 'enabled' : 'disabled'} - Animations running at ${debugMode ? '10x' : 'normal'} speed`);
+            
+            const debugIndicator = document.getElementById('debug-indicator');
+            if (debugIndicator) {
+                debugIndicator.style.display = debugMode ? 'block' : 'none';
+            }
+        }
+        
+        function updateTransitionSpeeds() {
+            const duration = debugMode ? 0.16 : 0.8; 
+            
+            document.documentElement.style.setProperty('--transition-duration', `${duration}s`);
+            
+            document.querySelectorAll('.sponsor-image').forEach(img => {
+                img.style.transitionDuration = `${duration}s`;
+            });
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.transitionDuration = `${duration}s`;
+            });
+            
+            const styleElement = document.getElementById('dynamic-styles');
+            if (styleElement) {
+                styleElement.textContent = `
+                    .sponsor-image.returning {
+                        transition-duration: ${duration}s !important;
+                    }
+                `;
+            }
+        }
 
-    <!-- New prism face: PRIMARY SPONSORS Updated 
-    <div id="primary-sponsors-2" class="step prism-face primary-sponsors-2" data-rotate-x="-120" data-y="150">
-        <div class="prism-face-inner" id="primary-sponsor-logos-2"></div>
-    </div> -->
+        function createSponsorElement(imagePath, type) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'sponsor-wrapper';
+            
+            const img = document.createElement('img');
+            img.src = `images/${imagePath}`;
+            img.alt = `${type} Sponsor`;
+            img.className = 'sponsor-image';
+            
+            if (type === 'Platinum') {
+                img.style.height = '120px';
+            } else if (type === 'Gold') {
+                img.style.height = '80px';
+            } else if (type === 'Silver') {
+                img.style.height = '48px';
+            }
+            
+            wrapper.appendChild(img);
+            return wrapper;
+        }
 
-    <!-- Third & last prism face: SILVER SPONSORS -->
-    <div id="silver-sponsors" class="step prism-face silver-sponsors" data-rotate-x="-240" data-y="-150">
-        <div class="prism-face-inner" id="silver-sponsor-logos"></div>
-    </div>
-</div>
+        function initializeSponsorImages() {
+            const headlineContainer = document.getElementById('welcome-headline');
+            if (sponsorConfig.headline) {
+                headlineContainer.innerHTML = sponsorConfig.headline;
+            } else {
+                headlineContainer.style.display = 'none';
+            }
 
-<script src="js/less-1.7.0.min.js"></script>
-<script src="js/impress.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/main.js"></script>
+            const goldContainer = document.getElementById('goldSponsors');
+            sponsorConfig.goldSponsors.forEach(sponsor => {
+                goldContainer.appendChild(createSponsorElement(sponsor, 'Gold'));
+            });
+            
+            if (sponsorConfig.silverSponsors && sponsorConfig.silverSponsors.length > 0) {
+                const silverSponsors = [...sponsorConfig.silverSponsors];
+                const halfLength = Math.ceil(silverSponsors.length / 2);
+                
+                const topSilverContainer = document.getElementById('silverSponsorsTop');
+                silverSponsors.slice(0, halfLength).forEach(sponsor => {
+                    topSilverContainer.appendChild(createSponsorElement(sponsor, 'Silver'));
+                });
+                
+                const bottomSilverContainer = document.getElementById('silverSponsorsBottom');
+                silverSponsors.slice(halfLength).forEach(sponsor => {
+                    bottomSilverContainer.appendChild(createSponsorElement(sponsor, 'Silver'));
+                });
+            }
+        }
 
+        async function animateSponsors() {
+            const currentPage = document.querySelector('.page:not(.hidden)');
+            const sponsors = Array.from(currentPage.querySelectorAll('.sponsor-image:not(.animated)'));
+            
+            const TRANSITION_DURATION = debugMode ? 160 : 800;
+            const TARGET_HEIGHT = 170;
+            
+            if (sponsors.length === 0) {
+                sponsorAnimationComplete = true;
+                return;
+            }
+            
+            sponsorAnimationComplete = false;
+            
+            function animateSponsor(sponsor, index) {
+                return new Promise(async (resolve) => {
+                    if (shouldStopSponsorAnimation) {
+                        resolve();
+                        return;
+                    }
+                    
+                    const wrapper = sponsor.closest('.sponsor-wrapper');
+                    isAnimatingSponsor = true;
+                    
+                    sponsor.offsetHeight;
+                    const rect = sponsor.getBoundingClientRect();
+                    const originalWidth = rect.width;
+                    const originalHeight = rect.height;
+                    
+                    const newHeight = TARGET_HEIGHT;
+                    const newWidth = (originalWidth / originalHeight) * newHeight;
+                    
+                    sponsor.style.width = originalWidth + 'px';
+                    sponsor.style.height = originalHeight + 'px';
+                    sponsor.style.top = rect.top + 'px';
+                    sponsor.style.left = rect.left + 'px';
+                    
+                    if (sponsor.src && sponsor.src.toLowerCase().endsWith('.svg')) {
+                        sponsor.style.imageRendering = 'crisp-edges';
+                    } else {
+                        sponsor.style.imageRendering = 'high-quality';
+                    }
+                    
+                    wrapper.classList.add('animating');
+                    
+                    await new Promise(r => setTimeout(r, 50));
+                    
+                    sponsor.classList.add('centered');
+                    sponsor.style.width = newWidth + 'px';
+                    sponsor.style.height = newHeight + 'px';
+                    sponsor.style.marginLeft = -(newWidth / 2) + 'px';
+                    sponsor.style.marginTop = -(newHeight / 2) + 'px';
+                    
+                    let duration = 2000;
+                    if (sponsor.closest('.platinum-sponsors')) {
+                        duration = sponsorConfig.platinumDuration;
+                    } else if (sponsor.closest('.gold-sponsors')) {
+                        duration = sponsorConfig.goldDuration;
+                    } else if (sponsor.closest('.silver-sponsors')) {
+                        duration = sponsorConfig.silverDuration || sponsorConfig.goldDuration;
+                    }
+                    
+                    if (debugMode) {
+                        duration = duration / 10;
+                    }
+                    
+                    await new Promise(r => setTimeout(r, duration * 0.95));
+                    
+                    sponsor.classList.add('returning');
+                    sponsor.classList.remove('centered');
+                    sponsor.style.width = originalWidth + 'px';
+                    sponsor.style.height = originalHeight + 'px';
+                    sponsor.style.marginLeft = '0';
+                    sponsor.style.marginTop = '0';
+                    
+                    const waitBeforeNext = TRANSITION_DURATION * 0.2;
+                    await new Promise(r => setTimeout(r, waitBeforeNext));
+                    
+                    if (index < sponsors.length - 1 && !shouldStopSponsorAnimation) {
+                        animateSponsor(sponsors[index + 1], index + 1);
+                    }
+                    
+                    await new Promise(r => setTimeout(r, TRANSITION_DURATION - waitBeforeNext));
+                    
+                    sponsor.classList.remove('returning');
+                    wrapper.classList.remove('animating');
+                    sponsor.style.width = '';
+                    sponsor.style.height = '';
+                    sponsor.style.top = '';
+                    sponsor.style.left = '';
+                    sponsor.style.marginLeft = '';
+                    sponsor.style.marginTop = '';
+                    sponsor.classList.add('animated');
+                    
+                    resolve();
+                });
+            }
+            
+            await animateSponsor(sponsors[0], 0);
+            
+            while (currentPage.querySelectorAll('.sponsor-image:not(.animated)').length > 0) {
+                if (shouldStopSponsorAnimation) break;
+                await new Promise(r => setTimeout(r, 100));
+            }
+            
+            sponsorAnimationComplete = true;
+        }
+
+        function createParticles() {
+            const container = document.querySelector('.transition-particles');
+            container.innerHTML = '';
+            
+            const particleCount = 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                
+                particle.className = 'particle';
+                
+                const size = Math.random() * 9 + 3;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                const centerBias = Math.random() < 0.7;
+                let xPos, yPos;
+                
+                if (centerBias) {
+                    xPos = 30 + Math.random() * 40;
+                    yPos = 30 + Math.random() * 40;
+                } else {
+                    xPos = Math.random() * 100;
+                    yPos = Math.random() * 100;
+                }
+                
+                particle.style.left = `${xPos}%`;
+                particle.style.top = `${yPos}%`;
+                
+                particle.style.transitionDelay = `${Math.random() * 0.2}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        function animateParticles() {
+            const particles = document.querySelectorAll('.particle');
+            const baseDuration = debugMode ? 800 : 1600;
+            
+            particles.forEach((particle, index) => {
+                const delay = Math.random() * 200 + (index % 10) * 30;
+                
+                setTimeout(() => {
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 500 + 200;
+                    
+                    const xDir = Math.cos(angle);
+                    const yDir = Math.sin(angle);
+                    
+                    const duration = baseDuration + (Math.random() * 400 - 200);
+                    
+                    particle.style.transform = 'scale(0)';
+                    particle.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        particle.style.transition = `transform 0.3s ease-out, opacity 0.3s ease-out`;
+                        particle.style.transform = 'scale(1)';
+                        particle.style.opacity = Math.random() * 0.3 + 0.7;
+                        
+                        setTimeout(() => {
+                            particle.style.transition = `transform ${duration}ms ease-out, opacity ${duration * 0.8}ms ease-out`;
+                            particle.style.transform = `translate(${xDir * distance}px, ${yDir * distance}px) scale(${Math.random() * 0.5 + 0.5})`;
+                            particle.style.opacity = '0';
+                        }, 300);
+                    }, 10);
+                }, delay);
+            });
+        }
+        
+        function flashEffect() {
+            const flash = document.querySelector('.flash-overlay');
+            flash.classList.add('active');
+            
+            setTimeout(() => {
+                flash.classList.remove('active');
+            }, debugMode ? 150 : 250);
+        }
+        
+        async function transitionToPage(showPage, hidePages) {
+            createParticles();
+            
+            flashEffect();
+            
+            await new Promise(resolve => setTimeout(resolve, 50));
+            
+            document.querySelector('.transition-particles').classList.add('active');
+            
+            animateParticles();
+            
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            hidePages.forEach(page => page.classList.add('hidden'));
+            
+            const transitionDuration = debugMode ? 160 : 800;
+            await new Promise(resolve => setTimeout(resolve, transitionDuration / 2));
+            
+            showPage.classList.remove('hidden');
+            
+            await new Promise(resolve => setTimeout(resolve, transitionDuration));
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            document.querySelector('.transition-particles').classList.remove('active');
+        }
+
+        async function switchPages() {
+            const welcomePage = document.querySelector('.welcome-page');
+            const sponsorsPage = document.querySelector('.sponsors-page');
+            const silverSponsorsPage = document.querySelector('.silver-sponsors-page');
+            
+            while (true) {
+                console.log("Starting page cycle");
+                
+                await transitionToPage(welcomePage, [sponsorsPage, silverSponsorsPage]);
+                
+                document.querySelectorAll('.sponsor-image').forEach(img => {
+                    img.classList.remove('animated');
+                });
+                
+                const welcomeDuration = debugMode ? 1600 : 8000;
+                console.log(`Showing welcome page for ${welcomeDuration}ms`);
+                await new Promise(resolve => setTimeout(resolve, welcomeDuration));
+
+                console.log("Transitioning to sponsors page");
+                await transitionToPage(sponsorsPage, [welcomePage, silverSponsorsPage]);
+                
+                const preAnimationDelay = debugMode ? 200 : 2000;
+                console.log(`Waiting ${preAnimationDelay}ms before starting gold sponsors animation`);
+                await new Promise(resolve => setTimeout(resolve, preAnimationDelay));
+                
+                console.log("Animating gold sponsors");
+                sponsorAnimationComplete = false;
+                shouldStopSponsorAnimation = false;
+                await animateSponsors();
+                
+                const pagePauseDuration = debugMode ? 100 : 500;
+                console.log(`Pausing for ${pagePauseDuration}ms before silver sponsors`);
+                await new Promise(resolve => setTimeout(resolve, pagePauseDuration));
+                
+                console.log("Transitioning to silver sponsors page");
+                await transitionToPage(silverSponsorsPage, [welcomePage, sponsorsPage]);
+                
+                console.log("Animating silver sponsors");
+                sponsorAnimationComplete = false;
+                shouldStopSponsorAnimation = false;
+                
+                const originalSilverDuration = sponsorConfig.silverDuration;
+                sponsorConfig.silverDuration = originalSilverDuration 
+                    ? Math.floor(originalSilverDuration * 0.67) 
+                    : Math.floor((sponsorConfig.goldDuration || 2000) * 0.67);
+                
+                await animateSponsors();
+                
+                sponsorConfig.silverDuration = originalSilverDuration;
+                
+                const silverPauseDuration = debugMode ? 50 : 250;
+                console.log(`Pausing for ${silverPauseDuration}ms before returning to welcome page`);
+                await new Promise(resolve => setTimeout(resolve, silverPauseDuration));
+            }
+        }
+
+        window.addEventListener('load', () => {
+            checkDebugModeFromURL();
+            
+            if (sponsorConfig.pageTitle) {
+                document.title = sponsorConfig.pageTitle;
+            }
+            
+            const styleElement = document.createElement('style');
+            styleElement.id = 'dynamic-styles';
+            document.head.appendChild(styleElement);
+            
+            updateTransitionSpeeds();
+            
+            const debugIndicator = document.createElement('div');
+            debugIndicator.id = 'debug-indicator';
+            debugIndicator.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: rgba(0,0,0,0.7);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-family: monospace;
+                z-index: 9999;
+                display: ${debugMode ? 'block' : 'none'};
+            `;
+            debugIndicator.textContent = 'DEBUG MODE (10x speed)';
+            document.body.appendChild(debugIndicator);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'd') {
+                    toggleDebugMode();
+                }
+            });
+            
+            window.addEventListener('hashchange', () => {
+                const wasDebugMode = debugMode;
+                const isNowDebugMode = checkDebugModeFromURL();
+                
+                if (wasDebugMode !== isNowDebugMode) {
+                    updateTransitionSpeeds();
+                    
+                    const debugIndicator = document.getElementById('debug-indicator');
+                    if (debugIndicator) {
+                        debugIndicator.style.display = debugMode ? 'block' : 'none';
+                    }
+                }
+            });
+            
+            createParticles();
+            
+            initializeSponsorImages();
+            switchPages();
+        });
+    </script>
 </body>
 </html>

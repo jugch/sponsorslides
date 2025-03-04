@@ -51,7 +51,6 @@ const sponsorConfig = {
     // Slide display duration
     // Time each slide is displayed in ms.
     // Make sure that all animations fit in the duration
-    introDuration: 2000,
     jugLogoDuration: 3000,
 
     // Over all slides, each logo of the sponsors will be highlighted

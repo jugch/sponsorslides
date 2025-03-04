@@ -775,7 +775,7 @@
                     img.classList.remove('animated');
                 });
                 
-                const welcomeDuration = debugMode ? 1600 : 8000;
+                const welcomeDuration = debugMode ? sponsorConfig.jugLogoDuration / 10 : sponsorConfig.jugLogoDuration;
                 console.log(`Showing welcome page for ${welcomeDuration}ms`);
                 await new Promise(resolve => setTimeout(resolve, welcomeDuration));
 

@@ -12,7 +12,7 @@ const sponsorConfig = {
     goldSponsors: [
         'gold/bbv.svg',
         'gold/ergon.svg',
-        'gold/netcetera.svg',
+        'gold/netcetera.png',
         'gold/orange_business.png',
         'gold/zuehlke.png'
     ],
